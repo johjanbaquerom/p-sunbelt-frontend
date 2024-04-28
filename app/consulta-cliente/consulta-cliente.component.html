@@ -1,0 +1,34 @@
+<div>
+    <h2>Consulta de Cliente</h2>
+    <div>
+      <label for="tipoDocumento">Tipo de Documento:</label>
+      <select [(ngModel)]="selectedTipoDocumento" name="tipoDocumento" id="tipoDocumento">
+        <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="numeroDocumento">Número de Documento:</label>
+      <input type="text" [(ngModel)]="numeroDocumento" name="numeroDocumento" id="numeroDocumento">
+    </div>
+    <div>
+      <button (click)="consultarCliente()">Consultar</button>
+    </div>
+    <!-- Indicador de carga -->
+    <div *ngIf="isLoading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Cargando...</div>
+    </div>
+    <!-- Datos del cliente -->
+    <div *ngIf="cliente">
+      <h3>Datos del Cliente</h3>
+      <ul>
+        <li>Primer Nombre: {{ cliente.primerNombre }}</li>
+        <li>Segundo Nombre: {{ cliente.segundoNombre }}</li>
+        <li>Primer Apellido: {{ cliente.primerApellido }}</li>
+        <li>Segundo Apellido: {{ cliente.segundoApellido }}</li>
+        <li>Teléfono: {{ cliente.telefono }}</li>
+        <li>Dirección: {{ cliente.direccion }}</li>
+        <li>Ciudad de Residencia: {{ cliente.ciudadResidencia }}</li>
+      </ul>
+    </div>
+  </div>
