@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { ClienteService } from './clienteService';
 
 @Component({
   selector: 'app-consulta-cliente',
@@ -8,33 +9,38 @@ import Swal from 'sweetalert2';
   styleUrls: ['./consulta-cliente.component.css']
 })
 export class ConsultaClienteComponent {
-
   tiposDocumento: string[] = ['C', 'P'];
   selectedTipoDocumento: string = '';
   numeroDocumento: string = '';
-  cliente: any = null;
-isLoading: any;
+  cliente: any;
+  isLoading: boolean = false;
+  errorMessage: string = " ";
 
-  constructor(private http: HttpClient) {}
+  constructor(private clienteService: ClienteService) {} // Inyecta el servicio ClienteService
 
   consultarCliente(): void {
     if (this.selectedTipoDocumento && this.numeroDocumento) {
-      this.http.post<any>('http://localhost:8090/consultarCliente', {
-        tipoDocumento: this.selectedTipoDocumento,
-        numeroDocumento: this.numeroDocumento
-      }).subscribe(
-        response => {
-          this.cliente = response;
-          Swal.fire('Consulta exitosa', 'Los datos del cliente han sido obtenidos correctamente', 'success');
-        },
-        error => {
-          console.error('Error al consultar cliente:', error);
-          Swal.fire('Error', 'No se pudo obtener los datos del cliente. Por favor, inténtalo nuevamente', 'error');
-        }
-      );
+      this.isLoading = true;
+      this.clienteService.consultarCliente(this.selectedTipoDocumento, this.numeroDocumento)
+        .subscribe(
+          response => {
+            this.cliente = response;
+            this.isLoading = false;
+          },
+          error => {
+            console.error('Error al consultar cliente:', error);
+            this.isLoading = false;
+            this.errorMessage = 'No se pudo obtener los datos del cliente. Por favor, inténtalo nuevamente';
+            this.showErrorMessage(); // Mostrar mensaje de error
+          }
+        );
     } else {
-      Swal.fire('Error', 'Por favor selecciona un tipo de documento y proporciona un número de documento', 'error');
+      this.errorMessage = 'Por favor selecciona un tipo de documento y proporciona un número de documento';
+      this.showErrorMessage(); // Mostrar mensaje de error
     }
   }
 
+  showErrorMessage(): void {
+    Swal.fire('Error', this.errorMessage, 'error');
+  }
 }

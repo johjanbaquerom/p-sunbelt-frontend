@@ -28,3 +28,10 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+  .error-message {
+    background-color: #3498db;
+    color: white; 
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
